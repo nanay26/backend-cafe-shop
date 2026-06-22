@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// schema.prisma
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+model Menu {
+  id          Int      @id @default(autoincrement())
+  name        String
+  price       Float
+  description String   @db.Text
+  category    String   // 'coffee', 'non-coffee', 'snack'
+  image       String   // Menyimpan path gambar (misal: /uploads/kopi.png)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+model Order {
+  id           Int         @id @default(autoincrement())
+  customerName String?     // Nama Pelanggan / No. Meja
+  status       String      @default("pending") // "pending" | "completed"
+  paymentMethod String?    // "Tunai" | "Non-Tunai" | null
+  total        Int
+  createdAt    DateTime    @default(now())
+  items        OrderItem[]
+}
+
+model OrderItem {
+  id      Int    @id @default(autoincrement())
+  menuId  Int
+  name    String
+  price   Float
+  qty     Int
+  variant String
+  note    String? @default("") // Tambahkan baris ini
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId Int
+}
