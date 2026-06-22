@@ -21,7 +21,8 @@
     "db:seed": "ts-node prisma/seed.ts",
     "db:reset": "npx prisma migrate reset --force && npm run db:seed",
     "db:migrate": "npx prisma migrate dev",
-    "db:generate": "npx prisma generate"
+    "db:generate": "npx prisma generate",
+    "vercel-build": "npm install --force && npm run build"
   },
   "dependencies": {
     "@google/genai": "^1.37.0",
