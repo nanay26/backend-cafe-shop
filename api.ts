@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { getNestApp } from '../src/app.bootstrap';
+import { getNestApp } from './src/app.bootstrap';
 
 let cachedApp: any = null;
 
