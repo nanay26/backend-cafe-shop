@@ -1,22 +1,28 @@
-import type { IncomingMessage, ServerResponse } from 'http';
+import { VercelRequest, VercelResponse } from '@vercel/node';
 import { getNestApp } from '../src/app.bootstrap';
 
-let expressHandler: ((req: IncomingMessage, res: ServerResponse) => void) | null =
-  null;
+let cachedApp: any = null;
 
-async function getExpressHandler() {
-  if (!expressHandler) {
-    const app = await getNestApp();
-    expressHandler = app.getHttpAdapter().getInstance();
+async function getApp() {
+  if (cachedApp) {
+    return cachedApp;
   }
-
-  return expressHandler;
+  
+  const app = await getNestApp();
+  cachedApp = app;
+  return app;
 }
 
-export default async function handler(
-  req: IncomingMessage,
-  res: ServerResponse,
-) {
-  const expressApp = await getExpressHandler();
-  return expressApp(req, res);
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  const app = await getApp();
+  
+  // Handle the request with NestJS
+  const expressApp = app.getHttpAdapter().getInstance();
+  
+  return new Promise((resolve, reject) => {
+    expressApp(req, res, (err: any) => {
+      if (err) reject(err);
+      else resolve(res);
+    });
+  });
 }
