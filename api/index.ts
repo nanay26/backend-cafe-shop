@@ -14,7 +14,7 @@ async function getApp() {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  console.log('Handler called:', req.url, req.method);
+  console.log('Index handler called:', req.url, req.method);
   
   const app = await getApp();
   
