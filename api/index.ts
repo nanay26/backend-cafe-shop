@@ -14,21 +14,24 @@ async function getApp() {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  console.log('Index handler called:', req.url, req.method);
+  console.log('Handler called:', req.url, req.method);
   
-  const app = await getApp();
-  
-  // Handle the request with NestJS
-  const expressApp = app.getHttpAdapter().getInstance();
-  
-  return new Promise((resolve, reject) => {
-    expressApp(req, res, (err: any) => {
-      if (err) {
-        console.error('Express handler error:', err);
-        reject(err);
-      } else {
-        resolve(res);
-      }
+  try {
+    const app = await getApp();
+    const expressApp = app.getHttpAdapter().getInstance();
+    
+    return new Promise((resolve, reject) => {
+      expressApp(req, res, (err: any) => {
+        if (err) {
+          console.error('Express handler error:', err);
+          reject(err);
+        } else {
+          resolve(res);
+        }
+      });
     });
-  });
+  } catch (error) {
+    console.error('Handler error:', error);
+    res.status(500).json({ error: 'Internal server error', message: error.message });
+  }
 }
