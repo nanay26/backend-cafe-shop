@@ -46,11 +46,13 @@ export class MenuService {
         take: 5,
       });
       const fallbackMenu = menus.map((m) => m.name).join(', ');
+      const fallbackReply =
+        fallbackMenu.length > 0
+          ? `Maaf Kak, Barista sedang sibuk saat ini. Coba pilih salah satu menu favorit kami: ${fallbackMenu}.`
+          : 'Maaf Kak, Barista sedang sibuk saat ini. Menu belum tersinkron, silakan coba lagi sebentar ya.';
       return {
-        reply:
-          fallbackMenu.length > 0
-            ? `Maaf Kak, Barista sedang sibuk saat ini. Coba pilih salah satu menu favorit kami: ${fallbackMenu}.`
-            : 'Maaf Kak, Barista sedang sibuk saat ini. Menu belum tersinkron, silakan coba lagi sebentar ya.',
+        reply: fallbackReply,
+        text: fallbackReply,
       };
     }
 
@@ -109,7 +111,7 @@ export class MenuService {
         this.chatHistories.set(sessionId, newHistory);
 
         this.logger.log(`[Attempt ${attempt + 1}] SUCCESS model=${model}`);
-        return { reply };
+        return { reply, text: reply };
       } catch (error: any) {
         lastError = error;
         this.logger.error(
@@ -122,7 +124,9 @@ export class MenuService {
     }
 
     this.logger.error(`All ${MAX_RETRIES} retries exhausted. Final error: ${lastError?.message || 'Unknown'}`);
-    return { reply: 'Maaf kak, Barista sedang sibuk. Bisa tanya lagi dalam beberapa saat?' };
+    const fallback =
+      'Maaf kak, Barista sedang sibuk. Bisa tanya lagi dalam beberapa saat?';
+    return { reply: fallback, text: fallback };
   }
 
   // --- FUNGSI CRUD (DATABASE) ---

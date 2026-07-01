@@ -150,11 +150,12 @@ export class OrdersService {
       ].slice(-6);
       this.chatHistories.set(sessionId, updatedHistory);
 
-      return { reply };
+      return { reply, text: reply };
     } catch (error) {
       console.error('Chat Error:', error);
       return {
         reply: 'Maaf kak, Barista lagi sibuk di kasir. Tanya lagi sebentar ya!',
+        text: 'Maaf kak, Barista lagi sibuk di kasir. Tanya lagi sebentar ya!',
       };
     }
   }

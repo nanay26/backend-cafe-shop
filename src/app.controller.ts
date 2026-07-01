@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, UnauthorizedException } from '@nestjs/comm
 import { AppService } from './app.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller()
 export class AppController {
@@ -15,6 +16,7 @@ export class AppController {
     return this.appService.getHello();
   }
 
+  @Throttle({ default: { ttl: 60000, limit: 5 } })
   @Post('api/auth/mobile-login')
   async mobileLogin(@Body() body: { username: string; password: string }) {
     const { username, password } = body;

@@ -35,6 +35,7 @@ export class ChatService {
       return {
         status: 'success',
         text: 'Maaf Kak, AI sedang offline. Coba tanya menu, jam operasional, atau rekomendasi kopi favorit ya.',
+        reply: 'Maaf Kak, AI sedang offline. Coba tanya menu, jam operasional, atau rekomendasi kopi favorit ya.',
       };
     }
 
@@ -72,7 +73,7 @@ export class ChatService {
         }
 
         this.logger.log(`[Attempt ${attempt + 1}] SUCCESS model=${model}`);
-        return { status: 'success', text: aiResponse };
+        return { status: 'success', text: aiResponse, reply: aiResponse };
       } catch (error: any) {
         lastError = error;
         this.logger.error(
@@ -89,6 +90,7 @@ export class ChatService {
     return {
       status: 'error',
       text: 'Maaf kak, layanan AI sedang sibuk. Coba lagi dalam beberapa saat ya.',
+      reply: 'Maaf kak, layanan AI sedang sibuk. Coba lagi dalam beberapa saat ya.',
       error: errMsg,
     };
   }

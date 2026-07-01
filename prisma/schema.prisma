@@ -9,6 +9,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
@@ -24,6 +25,9 @@ model Menu {
   image       String   // Menyimpan path gambar (misal: /uploads/kopi.png)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([createdAt])
+  @@index([category, createdAt])
 }
 model Order {
   id           Int         @id @default(autoincrement())
@@ -33,6 +37,9 @@ model Order {
   total        Int
   createdAt    DateTime    @default(now())
   items        OrderItem[]
+
+  @@index([createdAt])
+  @@index([status, createdAt])
 }
 
 model OrderItem {
@@ -45,4 +52,7 @@ model OrderItem {
   note    String? @default("") // Tambahkan baris ini
   order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId Int
+
+  @@index([orderId])
+  @@index([menuId])
 }

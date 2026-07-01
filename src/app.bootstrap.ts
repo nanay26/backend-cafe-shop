@@ -8,6 +8,11 @@ import 'dotenv/config';
 let appPromise: Promise<NestExpressApplication> | null = null;
 
 function configureApp(app: NestExpressApplication) {
+  const allowedOrigins = (process.env.FRONTEND_URL || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -24,7 +29,7 @@ function configureApp(app: NestExpressApplication) {
   });
 
   app.enableCors({
-    origin: true,
+    origin: allowedOrigins.length > 0 ? allowedOrigins : true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     allowedHeaders: 'Content-Type, Accept, ngrok-skip-browser-warning',

@@ -22,7 +22,7 @@
     "db:reset": "npx prisma migrate reset --force && npm run db:seed",
     "db:migrate": "npx prisma migrate dev",
     "db:generate": "npx prisma generate",
-    "vercel-build": "npm install --force && npm run build"
+    "vercel-build": "npx prisma generate && npm run build"
   },
   "dependencies": {
     "@google/genai": "^1.37.0",
